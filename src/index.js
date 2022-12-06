@@ -1,33 +1,22 @@
 import './css/styles.css';
 var debounce = require('lodash.debounce');
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
-// import { fetchCountries } from './fetchCountries';
+import { fetchCountryByName } from './fetchCountries';
 
 const inputEl = document.querySelector('[id="search-box"]');
 const listOfCountry = document.querySelector('.country-list');
 const DEBOUNCE_DELAY = 300;
 
-// inputEl.addEventListener('input', debounce(onCountrySearch, DEBOUNCE_DELAY));
-inputEl.addEventListener('input', onCountrySearch);
+inputEl.addEventListener('input', debounce(onCountrySearch, DEBOUNCE_DELAY));
 
-function fetchCountryByName(name) {
-  return fetch(
-    `https://restcountries.com/v3.1/name/${name}?fields=name,capital,population,flags,languages`
-  )
-    .then(response => {
-      return response.json();
-    })
-    .then(countries => {
-      createListItemsMarkup(countries);
+function onCountrySearch(event) {
+  const searchCountryName = event.target.value;
+  console.log(searchCountryName);
 
-      //   const hhh = countries.map(country => {
-      //     console.log(country);
-      //     console.log(country.name.official);
-      //   });
-    })
-    .catch(error => {
-      console.log(error);
-    });
+  fetchCountryByName(searchCountryName)
+    .then(createListItemsMarkup)
+    .catch(onFetchError);
 }
 
 function createListItemsMarkup(countries) {
@@ -39,8 +28,6 @@ function createListItemsMarkup(countries) {
   listOfCountry.innerHTML = markupNameOfCountry;
 }
 
-function onCountrySearch(event) {
-  const searchCountryName = event.currentTarget.value;
-  console.log(searchCountryName);
-  fetchCountryByName(searchCountryName);
+function onFetchError(error) {
+  Notify.failure('Oops, there is no country with that name');
 }

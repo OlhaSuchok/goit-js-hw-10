@@ -1,13 +1,10 @@
-// export function fetchCountries(name) {
-//   return fetch(`https://restcountries.com/v3.1/name/{name}}`)
-//     .then(response => {
-//       return response.json();
-//     })
-//     .then(country => {
-//       // console.log(country[0].name.common);
-//       console.log(country);
-//     })
-//     .catch(error => {
-//       console.log(error);
-//     });
-// }
+export function fetchCountryByName(name) {
+  return fetch(
+    `https://restcountries.com/v3.1/name/${name}?fields=name,capital,population,flags,languages`
+  ).then(response => response.json());
+}
+
+// const hhh = countries.map(country => {
+//   console.log(country);
+//   console.log(country.name.official);
+// });
