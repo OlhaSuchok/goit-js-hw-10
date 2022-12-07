@@ -5,6 +5,7 @@ var debounce = require('lodash.debounce');
 
 const inputEl = document.querySelector('[id="search-box"]');
 const listOfCountryName = document.querySelector('.country-list');
+listOfCountryName.style.paddingLeft = 0;
 const listOfCountryData = document.querySelector('.country-info');
 const DEBOUNCE_DELAY = 300;
 
@@ -16,6 +17,7 @@ function onCountrySearch(event) {
   if (!searchCountryName) {
     listOfCountryName.innerHTML = '';
     listOfCountryData.innerHTML = '';
+    return;
   }
   console.log(searchCountryName);
   console.dir(listOfCountryName.childNodes.length);
@@ -73,5 +75,6 @@ function onFetchErrorLength(countries) {
 function onFetchError() {
   Notify.failure('Oops, there is no country with that name');
 }
-
 // Часто вистрибує помилка
+// Якщо користувач ввів назву країни, якої не існує, бекенд поверне не порожній масив, а помилку зі статус кодом 404 - не знайдено. Якщо це не обробити, то користувач ніколи не дізнається про те, що пошук не дав результатів. Додай повідомлення "Oops, there is no country with that name" у разі помилки, використовуючи бібліотеку notiflix.
+// Не забувай про те, що fetch не вважає 404 помилкою, тому необхідно явно відхилити проміс, щоб можна було зловити і обробити помилку.
