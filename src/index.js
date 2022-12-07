@@ -3,11 +3,15 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { fetchCountries } from './fetchCountries';
 var debounce = require('lodash.debounce');
 
-const inputEl = document.querySelector('[id="search-box"]');
-const listOfCountryName = document.querySelector('.country-list');
-listOfCountryName.style.paddingLeft = 0;
-const listOfCountryData = document.querySelector('.country-info');
 const DEBOUNCE_DELAY = 300;
+const inputEl = document.querySelector('[id="search-box"]');
+const listOfCountryData = document.querySelector('.country-info');
+const listOfCountryName = document.querySelector('.country-list');
+
+listOfCountryName.style.paddingLeft = 0;
+listOfCountryName.style.margin = 0;
+listOfCountryData.style.margin = 0;
+inputEl.style.margin = 0;
 
 inputEl.addEventListener('input', debounce(onCountrySearch, DEBOUNCE_DELAY));
 
@@ -23,8 +27,12 @@ function onCountrySearch(event) {
   console.dir(listOfCountryName.childNodes.length);
 
   fetchCountries(searchCountryName)
-    .then(createListCountryMarkup)
-    .catch(onFetchError);
+    .then(countries => {
+      createListCountryMarkup(countries);
+    })
+    .catch(error => {
+      onFetchError(error);
+    });
 }
 
 function createOneCountryMarkup(countries) {
@@ -72,7 +80,7 @@ function onFetchErrorLength(countries) {
   }
 }
 
-function onFetchError() {
+function onFetchError(error) {
   Notify.failure('Oops, there is no country with that name');
 }
 // Часто вистрибує помилка
