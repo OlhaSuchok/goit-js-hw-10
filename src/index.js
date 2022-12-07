@@ -23,12 +23,10 @@ function onCountrySearch(event) {
     listOfCountryData.innerHTML = '';
     return;
   }
-  console.log(searchCountryName);
-  console.dir(listOfCountryName.childNodes.length);
 
   fetchCountries(searchCountryName)
     .then(countries => {
-      createListCountryMarkup(countries);
+      onFetchErrorLength(countries);
     })
     .catch(error => {
       onFetchError(error);
@@ -50,7 +48,6 @@ function createOneCountryMarkup(countries) {
     })
     .join('');
   listOfCountryData.innerHTML = markupNameOfCountry;
-  onFetchErrorLength(countries);
 }
 
 function createListCountryMarkup(countries) {
@@ -61,28 +58,21 @@ function createListCountryMarkup(countries) {
     })
     .join('');
   listOfCountryName.innerHTML = markupNameOfCountry;
-  onFetchErrorLength(countries);
 }
 
 function onFetchErrorLength(countries) {
-  const lengthOfListCountry = listOfCountryName.childNodes.length;
-  if (lengthOfListCountry > 10) {
+  if (countries.length > 10) {
     listOfCountryName.innerHTML = '';
     Notify.warning(
       'Too many matches found. Please enter a more specific name.'
     );
-  } else if (lengthOfListCountry > 2 && lengthOfListCountry < 10) {
+  } else if (countries.length > 2 && countries.length < 10) {
     createListCountryMarkup(countries);
-  } else if (lengthOfListCountry === 1) {
+  } else if (countries.length === 1) {
     createOneCountryMarkup(countries);
-  } else if (lengthOfListCountry === 0) {
-    onFetchError();
   }
 }
 
 function onFetchError(error) {
   Notify.failure('Oops, there is no country with that name');
 }
-// Часто вистрибує помилка
-// Якщо користувач ввів назву країни, якої не існує, бекенд поверне не порожній масив, а помилку зі статус кодом 404 - не знайдено. Якщо це не обробити, то користувач ніколи не дізнається про те, що пошук не дав результатів. Додай повідомлення "Oops, there is no country with that name" у разі помилки, використовуючи бібліотеку notiflix.
-// Не забувай про те, що fetch не вважає 404 помилкою, тому необхідно явно відхилити проміс, щоб можна було зловити і обробити помилку.
