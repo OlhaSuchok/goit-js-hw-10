@@ -26,12 +26,17 @@ function onCountrySearch(event) {
 }
 
 function createOneCountryMarkup(countries) {
+  listOfCountryName.innerHTML = '';
   const markupNameOfCountry = countries
     .map(country => {
-      return `<img src = ${country.flags.svg} style = "width: 30px; margin-right: 10px"><h1>${country.name.official}</h1>
+      return `<div style = "display: flex; align-items: center"><img src = ${
+        country.flags.svg
+      } style = "width: 40px; max-height: 30px; margin-right: 10px"><h1>${
+        country.name.common
+      }</h1></div>
       <p><b>Capital:</b> ${country.capital}</p>
       <p><b>Population:</b> ${country.population}</p>
-      <p><b>Languages:</b> ${country.languages.swe}</p>`;
+      <p><b>Languages:</b> ${Object.values(country.languages)}</p>`;
     })
     .join('');
   listOfCountryData.innerHTML = markupNameOfCountry;
@@ -39,9 +44,10 @@ function createOneCountryMarkup(countries) {
 }
 
 function createListCountryMarkup(countries) {
+  listOfCountryData.innerHTML = '';
   const markupNameOfCountry = countries
     .map(country => {
-      return `<li style = "display: flex"><img src = ${country.flags.svg} style = "width: 30px; margin-right: 10px"><p>${country.name.official}</p></li>`;
+      return `<li style = "display: flex; align-items: center"><img src = ${country.flags.svg} style = "width: 40px; max-height: 30px; margin-right: 10px"><p>${country.name.common}</p></li>`;
     })
     .join('');
   listOfCountryName.innerHTML = markupNameOfCountry;
@@ -51,13 +57,13 @@ function createListCountryMarkup(countries) {
 function onFetchErrorLength(countries) {
   const lengthOfListCountry = listOfCountryName.childNodes.length;
   if (lengthOfListCountry > 10) {
+    listOfCountryName.innerHTML = '';
     Notify.warning(
       'Too many matches found. Please enter a more specific name.'
     );
   } else if (lengthOfListCountry > 2 && lengthOfListCountry < 10) {
     createListCountryMarkup(countries);
   } else if (lengthOfListCountry === 1) {
-    listOfCountryName.innerHTML = '';
     createOneCountryMarkup(countries);
   } else if (lengthOfListCountry === 0) {
     onFetchError();
@@ -67,3 +73,5 @@ function onFetchErrorLength(countries) {
 function onFetchError() {
   Notify.failure('Oops, there is no country with that name');
 }
+
+// Часто вистрибує помилка
